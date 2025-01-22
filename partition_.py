@@ -95,7 +95,7 @@ class Partition1(object):#object, DataEvaluator
         active_num = sum(self.active)
 
         for it in range(1):
-            print(f"refit it {it}")
+
             beta = beta - 0.05
 
 
@@ -141,20 +141,16 @@ class Partition1(object):#object, DataEvaluator
             active_ = np.copy(active_keep)
             ##############################################################################################################
             train_keep = indices_to_keep[self.active]
-            print("==================================")
-            print(active_keep.sum())
-            print(len(active_keep) * 0.07)
+
             if len(self.y_train[0]) <= 2:
                 if active_keep.sum() <= 0.025*len(self.x_train):
                     print("break")
-                    print(active_keep.sum())
-                    print(len(active_keep) * 0.07)
+
                     break
             else:
                 if active_keep.sum() <= 0.2*len(self.x_train):
                     print("break")
-                    print(active_keep.sum())
-                    print(len(active_keep) * 0.07)
+
                     break
 
 
@@ -162,14 +158,11 @@ class Partition1(object):#object, DataEvaluator
         results = self.active & active_keep
         indices_to_keep = np.copy(results)
 
-        if indices_to_keep.sum()==0:
-            print('***********************************************************************************************')
-            print('0')
+
         train_x = [self.x_train[i] for i in range(len(self.x_train)) if self.active[i] and active_keep[i]]
         train_y = [self.y_train[i] for i in range(len(self.y_train)) if self.active[i] and active_keep[i]]
         train_y = torch.stack(train_y)
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print('sets',indices_to_keep.sum())
+
 
         net = self.classifier_fn.clone()
         net.fit(train_x, train_y, *args, **kwargs)
@@ -206,8 +199,7 @@ class Partition1(object):#object, DataEvaluator
 
         m_losses = np.mean(losses)
         keep1 = losses <= m_losses
-        if keep1.sum()==0:
-            print('*******************************************keep1**********************************************************')
+
 
         keep2 = losses != losses
 
@@ -297,7 +289,7 @@ class Partition2(object):#object, DataEvaluator
         self.x_train = x_train
         self.y_train = y_train
         self.active = active
-        print('self.active=', sum(self.active))
+
         self.num_classes = len(y_train[0])
         self.dataset_size = len(x_train)
         self.losses = losses
@@ -395,14 +387,12 @@ class Partition2(object):#object, DataEvaluator
             if len(self.y_train[0]) <= 2:
                 if active_keep.sum() <= 0.025*len(self.x_train):
                     print("break")
-                    print(active_keep.sum())
-                    print(len(active_keep) * 0.07)
+
                     break
             else:
                 if active_keep.sum() <= 0.075*len(self.x_train):
                     print("break")
-                    print(active_keep.sum())
-                    print(len(active_keep) * 0.07)
+
                     break
 
 
@@ -456,7 +446,7 @@ class Partition2(object):#object, DataEvaluator
                 losses_for_label = losses[indices]
                 sorted_indices_for_label = np.argsort(losses_for_label)
                 min_025_indices = indices[
-                    sorted_indices_for_label[:int(0.01 * len(sorted_indices_for_label))]]
+                    sorted_indices_for_label[:int(0.05 * len(sorted_indices_for_label))]]
 
                 keep2[min_025_indices] = True
         else:
